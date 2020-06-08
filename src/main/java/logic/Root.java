@@ -12,15 +12,30 @@ public class Root {
     Path path;
     SourceRoot sourceRoot;
     List<ParseResult<CompilationUnit>> results;
-    List<CompilationUnit> resultsCU;
+    List<CompilationUnit> compilations;
 
     public Root(Path path) throws IOException {
         this.path = path;
         this.sourceRoot = new SourceRoot(this.path);
         this.results = this.sourceRoot.tryToParse();
-        this.resultsCU = this.sourceRoot.getCompilationUnits();
-
+        this.compilations = this.sourceRoot.getCompilationUnits();
     }
 
+    public Path getPath() {
+        return path;
+    }
+
+    public SourceRoot getSourceRoot() {
+        return sourceRoot;
+    }
+
+
+    public List<ParseResult<CompilationUnit>> getResults() {
+        return results;
+    }
+
+    public List<CompilationUnit> getCompilations() {
+        return compilations;
+    }
 
 }

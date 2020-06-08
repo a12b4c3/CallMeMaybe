@@ -1,6 +1,4 @@
-import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.utils.SourceRoot;
 import logic.Root;
 
 import java.io.IOException;
@@ -19,7 +17,9 @@ public class App {
     public static void main(String[] args) {
         try {
             Root root = new Root(Paths.get(ROOT_DIR));
-            System.out.println("hello");
+            List<CompilationUnit> cus = root.getCompilations();
+            System.out.println(cus);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
