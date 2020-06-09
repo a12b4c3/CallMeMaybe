@@ -12,12 +12,14 @@ import libs.SequenceDiagram;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 public class Root {
     Path path;
     SourceRoot sourceRoot;
     List<ParseResult<CompilationUnit>> results;
     List<CompilationUnit> compilations;
+    Set<String> localClasses;
     String className;
     String methodName;
     SequenceDiagram diagram;
@@ -46,14 +48,12 @@ public class Root {
         NodeList<Statement> statements = initMethod.getBody().get().getStatements();
         Validator.validateNotNull(statements);
         this.initializeDiagram();
+        ExprHandler handler = new ExprHandler(this.className);
         this.evaluateStatements(statements);
     }
 
     private void evaluateStatements(NodeList<Statement> statements) {
-        for(Statement s: statements) {
-            ExprHandler handler = new ExprHandler(this.className);
-            handler.handle(s);
-        }
+
     }
 
     private void initializeDiagram() {

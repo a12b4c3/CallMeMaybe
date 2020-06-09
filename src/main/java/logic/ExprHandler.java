@@ -1,30 +1,37 @@
 package logic;
 
-import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.stmt.*;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import libs.SequenceDiagram;
 
-public class ExprHandler {
+
+public class ExprHandler extends VoidVisitorAdapter<Void> {
     String srcClass;
+    SequenceDiagram diagram;
 
     public ExprHandler(String srcClass) {
+        this.diagram = SequenceDiagram.getSequenceDiagram();
+    }
+
+    public void handleStatements(NodeList<Statement> statements) {
+        for(Statement s: statements) {
+
+        }
+    }
+
+    @Override
+    public void visit(ExplicitConstructorInvocationStmt s, Void arg) {
 
     }
-    /* given a statement
 
-     */
-    public void handle(Statement stmt) {
-        String stmtClassName = stmt.getClass().getSimpleName();
-        if (stmtClassName.equals("ExpressionStmt")) {
+    @Override
+    public void visit(ExpressionStmt s, Void arg) {
 
-        } else if (stmtClassName.equals("ForStmt")) {
+    }
 
-        } else if (stmtClassName.equals("IfStmt")) {
+    @Override
+    public void visit(ForEachStmt s, Void arg) {
 
-        } else if (stmtClassName.equals("ReturnStmt")) {
-
-        } else if (stmtClassName.equals("WhileStmt")) {
-
-        } else {
-            System.out.println("Ignored unsupported STMT type: " + stmtClassName);
-        }
     }
 }
