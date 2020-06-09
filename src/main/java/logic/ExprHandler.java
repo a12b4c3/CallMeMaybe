@@ -24,7 +24,7 @@ public class ExprHandler {
         } else if (stmtClassName.equals("WhileStmt")) {
 
         } else {
-            System.out.println("Unsupported STMT type: " + stmtClassName);
+            System.out.println("Ignored unsupported STMT type: " + stmtClassName);
         }
     }
 }

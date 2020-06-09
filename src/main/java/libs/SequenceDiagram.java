@@ -117,6 +117,14 @@ public class SequenceDiagram {
     }
 
     /**
+     * adds a comment into the DSL code that will not be shown on the callgraph
+     * @param comment comment string to be added.
+     */
+    public void addComment(String comment) {
+        this.stringToPaint.add("//%s" + comment);
+    }
+
+    /**
      * calls preceding this are in a loop, calls following this ar no longer looping.
      */
     public void endLoop() {
