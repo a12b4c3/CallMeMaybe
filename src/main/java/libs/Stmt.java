@@ -3,7 +3,7 @@ package libs;
 /** Enums for subclasses of the Statement JavaParser AST Class.
  * https://www.javadoc.io/doc/com.github.javaparser/javaparser-core/3.5.0/com/github/javaparser/ast/stmt/Statement.html
  */
-public enum Stmt {
+public enum Stmt implements StrConst {
     ASSERT("AssertStmt"),
     BLOCK("BlockStmt"),
     BREAK("BreakStmt"),
@@ -32,7 +32,8 @@ public enum Stmt {
         this.type = type;
     }
 
-    public String getType() {
-        return type;
+
+    public String toString() {
+        return this.type;
     }
 }

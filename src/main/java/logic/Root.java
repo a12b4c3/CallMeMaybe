@@ -1,6 +1,7 @@
 package logic;
 
 import Visitors.GenericMethodFinder;
+import Visitors.VoidClassNameCollector;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
@@ -8,9 +9,11 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.utils.SourceRoot;
 import libs.SequenceDiagram;
+import libs.Utils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +22,7 @@ public class Root {
     SourceRoot sourceRoot;
     List<ParseResult<CompilationUnit>> results;
     List<CompilationUnit> compilations;
-    Set<String> localClasses;
+    Set<String> projectClasses;
     String className;
     String methodName;
     SequenceDiagram diagram;
@@ -30,30 +33,22 @@ public class Root {
         this.results = this.sourceRoot.tryToParse();
         this.compilations = this.sourceRoot.getCompilationUnits();
         this.diagram = SequenceDiagram.getSequenceDiagram();
+        this.projectClasses = new HashSet<String>();
     }
 
     public void start(String className, String methodName) {
         this.className = className;
         this.methodName = methodName;
         GenericMethodFinder mfinder = new GenericMethodFinder();
-        CompilationUnit target = null;
-        for(CompilationUnit cu: this.compilations) {
-            if (cu.getStorage().get().getFileName().equals(className + ".java")) {
-                target = cu;
-                break;
-            }
-        }
+        CompilationUnit target = Utils.retrieveTargetCU(this.compilations, this.className);
+        this.findLocalClasses();
         Validator.validateNotNull(target);
         MethodDeclaration initMethod = mfinder.visit(target, methodName);
         NodeList<Statement> statements = initMethod.getBody().get().getStatements();
         Validator.validateNotNull(statements);
         this.initializeDiagram();
-        ExprHandler handler = new ExprHandler(this.className);
-        this.evaluateStatements(statements);
-    }
-
-    private void evaluateStatements(NodeList<Statement> statements) {
-
+        BlockHandler handler = new BlockHandler(this.className, this.sourceRoot);
+        handler.handleStatements(statements);
     }
 
     private void initializeDiagram() {
@@ -64,6 +59,13 @@ public class Root {
         this.diagram.addEntryPoint(this.className, this.methodName);
     }
 
+    private void findLocalClasses() {
+        VoidClassNameCollector classNameCollector = new VoidClassNameCollector();
+        for(CompilationUnit cu: this.compilations) {
+            classNameCollector.visit(cu, this.projectClasses);
+        }
+    }
+
     public Path getPath() {
         return path;
     }
@@ -71,7 +73,6 @@ public class Root {
     public SourceRoot getSourceRoot() {
         return sourceRoot;
     }
-
 
     public List<ParseResult<CompilationUnit>> getResults() {
         return results;
