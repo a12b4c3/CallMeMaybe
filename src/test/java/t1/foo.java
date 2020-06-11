@@ -10,6 +10,7 @@ public class foo {
         System.out.printf("call bazz next");
         int number = this.bazz();
         int number2 = this.bazz(3, "s");
+        this.biff();
         System.out.println("the number is " + number);
     }
 
@@ -22,5 +23,10 @@ public class foo {
     public int bazz(int i, String s) { return i; }
     public int bazz() {
         return 1;
+    }
+    public void biff() {
+        int a = 1;
+        int b = 2;
+        int c = a+b;
     }
 }

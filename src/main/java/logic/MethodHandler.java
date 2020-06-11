@@ -15,6 +15,7 @@ public class MethodHandler {
     private String currMethod;
     private List<String> methodParams;
     private MethodDeclaration methodNode;
+    private String returnType;
 
     public MethodHandler(SourceRoot root, String className, String methodName, List<String> methodParams) {
         this.root = root;
@@ -22,6 +23,7 @@ public class MethodHandler {
         this.currMethod = methodName;
         this.methodParams = methodParams;
         this.methodNode = Utils.getMethodDeclarationFromClass(this.root, this.currClass, this.currMethod, this.methodParams);
+        this.returnType = methodNode.getTypeAsString();
     }
 
     public void handleMethod() {
