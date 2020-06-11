@@ -40,8 +40,9 @@ public class GenericMethodFinder extends GenericVisitorAdapter<MethodDeclaration
      */
     public MethodDeclaration recursivelySearchMethodDec(Node n, String methodName, List<String> methodArgs) {
         if (nodeNameEquals(n, methodName) ) {
-
+            // todo
         }
+        return null;
     }
 
     private boolean nodeNameEquals(Node n, String target) {
