@@ -9,9 +9,9 @@ public class App {
     private SequenceDiagram sd = SequenceDiagram.getSequenceDiagram();
 
     // Give the root of the project here and name of the method to be analyzed.
-    private static String ROOT_DIR = "src/test/java/t2/";
-    private static String CLASS_NAME = "foo";
-    private static String METHOD_NAME = "calls_one_other_class_no_return";
+    private static String ROOT_DIR = "src/test/java/t3/";
+    private static String CLASS_NAME = "node";
+    private static String METHOD_NAME = "loop_five_times";
 
     public static void main(String[] args) {
         try {

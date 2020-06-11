@@ -47,7 +47,13 @@ public class SequenceDiagram {
      * @param BMethod
      */
     public void addVoidCallAToB(String AParticipant, String BParticipant, String BMethod) {
-        // todo
+        // TODO: add in between the middle of existing method calls
+        if (AParticipant != null && BParticipant != null && BMethod != null) {
+            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":" + BMethod + "()");
+            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":");
+        } else {
+            // throw exception?
+        }
     }
 
     /**
@@ -55,8 +61,14 @@ public class SequenceDiagram {
      * @param BParticipant
      * @param AParticipant
      */
-    public void addReturnCallBToA(String BParticipant, String AParticipant) {
-        // todo
+    public void addReturnCallBToA(String BParticipant, String AParticipant, String BMethod, String returnType) {
+        // TODO: add in between the middle of existing method calls
+        if (AParticipant != null && BParticipant != null && BMethod != null) {
+            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":" + BMethod + "()");
+            this.stringToPaint.add(AParticipant + "->" + BParticipant + ": ret " + returnType);
+        } else {
+            // throw exception?
+        }
     }
 
     /**
@@ -117,18 +129,34 @@ public class SequenceDiagram {
     }
 
     /**
+     * the following calls are boxed in a rectangle indicating a alt.
+     * @param ifCondition the initial condition
+     */
+    public void beginIf(String ifCondition) {
+        this.stringToPaint.add("alt " + ifCondition);
+    }
+
+    /**
+     * dash-lined section for more conditions
+     * @param elseifCondition other conditions, can be empty
+     */
+    public void moreElseIf(String elseifCondition) {
+        this.stringToPaint.add("else " + elseifCondition);
+    }
+
+    /**
+     * ends loops or if-conditions
+     */
+    public void endConditions() {
+        this.stringToPaint.add("end");
+    }
+
+    /**
      * adds a comment into the DSL code that will not be shown on the callgraph
      * @param comment comment string to be added.
      */
     public void addComment(String comment) {
         this.stringToPaint.add("//%s" + comment);
-    }
-
-    /**
-     * calls preceding this are in a loop, calls following this ar no longer looping.
-     */
-    public void endLoop() {
-        this.stringToPaint.add("end");
     }
 
     public void clear() {
