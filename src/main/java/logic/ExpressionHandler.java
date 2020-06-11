@@ -23,8 +23,11 @@ public class ExpressionHandler {
         this.root = root;
     }
 
+    /**
+     * given a statement, finds all of the instances of method calls with in that statement.
+     * @param stmt the statement node
+     */
     public void handle(ExpressionStmt stmt) {
-
         Expression exp = stmt.getExpression();
         List<MethodCallExpr> collector = new ArrayList<MethodCallExpr>();
         recursiveMethodCallFinder(exp, collector);
@@ -35,7 +38,9 @@ public class ExpressionHandler {
 
     private void handle(MethodCallExpr mCallExpr) {
         if (Utils.callInScope(mCallExpr, Expr.THIS)) {
-
+            MethodHandler mhandler = new MethodHandler(this.root, this.currClass, mCallExpr.getName().toString());
+            Validator.validateNotNull(mhandler);
+            mhandler.handleMethod();
         } else {
             // figure out what the scope is
             // check if scope is in the current project

@@ -1,7 +1,9 @@
 package logic;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.utils.SourceRoot;
 import libs.Utils;
 
@@ -16,6 +18,13 @@ public class MethodHandler {
         this.currClass = className;
         this.currMethod = methodName;
         this.methodNode = Utils.getMethodDeclarationFromClass(this.root, currClass, currMethod);
+    }
+
+    public void handleMethod() {
+        NodeList<Statement> statements = methodNode.getBody().get().getStatements();
+        Validator.validateNotNull(statements);
+        BlockHandler blockHandler = new BlockHandler(this.currClass, this.root);
+        blockHandler.handleStatements(statements);
     }
 
 

@@ -39,16 +39,10 @@ public class Root {
     public void start(String className, String methodName) {
         this.className = className;
         this.methodName = methodName;
-        GenericMethodFinder mfinder = new GenericMethodFinder();
-        CompilationUnit target = Utils.retrieveTargetCU(this.compilations, this.className);
         this.findLocalClasses();
-        Validator.validateNotNull(target);
-        MethodDeclaration initMethod = mfinder.visit(target, methodName);
-        NodeList<Statement> statements = initMethod.getBody().get().getStatements();
-        Validator.validateNotNull(statements);
         this.initializeDiagram();
-        BlockHandler handler = new BlockHandler(this.className, this.sourceRoot);
-        handler.handleStatements(statements);
+        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName);
+        mHandler.handleMethod();
     }
 
     private void initializeDiagram() {

@@ -9,6 +9,7 @@ public class foo {
         System.out.printf("supposed to ignore this");
         System.out.printf("call bazz next");
         int number = this.bazz();
+        int number2 = this.bazz(3, "s");
         System.out.println("the number is " + number);
     }
 
@@ -18,6 +19,7 @@ public class foo {
         System.out.println("shouldve called two methods");
     }
 
+    public int bazz(int i, String s) { return i; }
     public int bazz() {
         return 1;
     }
