@@ -35,9 +35,9 @@ public class Utils {
         return null;
     }
 
-    public static MethodDeclaration getMethodDeclarationFromClass(SourceRoot root, String className, String methodName) {
+    public static MethodDeclaration getMethodDeclarationFromClass(SourceRoot root, String className, String methodName, List<String> methodParams) {
         CompilationUnit cu = Utils.retrieveTargetCU(root.getCompilationUnits(), className);
         GenericMethodFinder finder = new GenericMethodFinder();
-        return finder.visit(cu, methodName);
+        return finder.recursivelySearchMethodDec(cu, methodName, methodParams);
     }
 }

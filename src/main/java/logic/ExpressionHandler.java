@@ -6,6 +6,7 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.utils.SourceRoot;
 import libs.Expr;
+import libs.LiteralExpr;
 import libs.SequenceDiagram;
 import libs.Utils;
 
@@ -38,7 +39,8 @@ public class ExpressionHandler {
 
     private void handle(MethodCallExpr mCallExpr) {
         if (Utils.callInScope(mCallExpr, Expr.THIS)) {
-            MethodHandler mhandler = new MethodHandler(this.root, this.currClass, mCallExpr.getName().toString());
+            List<String> mparams = this.getParamListFromMethodCall(mCallExpr);
+            MethodHandler mhandler = new MethodHandler(this.root, this.currClass, mCallExpr.getName().toString(), mparams);
             Validator.validateNotNull(mhandler);
             mhandler.handleMethod();
         } else {
@@ -58,5 +60,13 @@ public class ExpressionHandler {
                 recursiveMethodCallFinder(child, collector);
             }
         }
+    }
+
+    private List<String> getParamListFromMethodCall(MethodCallExpr mcall) {
+        List<String> ret = new ArrayList<>();
+        for(int i=0; i<mcall.getArguments().size(); i++) {
+            ret.add(LiteralExpr.getSimpleJavaName(mcall.getArgument(i).getClass().getSimpleName()));
+        }
+        return ret;
     }
 }

@@ -25,6 +25,7 @@ public class Root {
     Set<String> projectClasses;
     String className;
     String methodName;
+    List<String> methodParams;
     SequenceDiagram diagram;
 
     public Root(Path path) throws IOException {
@@ -36,12 +37,13 @@ public class Root {
         this.projectClasses = new HashSet<String>();
     }
 
-    public void start(String className, String methodName) {
+    public void start(String className, String methodName, List<String> methodParams) {
         this.className = className;
         this.methodName = methodName;
+        this.methodParams = methodParams;
         this.findLocalClasses();
         this.initializeDiagram();
-        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName);
+        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName, this.methodParams);
         mHandler.handleMethod();
     }
 
