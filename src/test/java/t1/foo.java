@@ -16,7 +16,7 @@ public class foo {
 
     public void calls_two_methods() {
         System.out.println("this will call two methods");
-        calls_one_method();
+        this.calls_one_method();
         System.out.println("shouldve called two methods");
     }
 

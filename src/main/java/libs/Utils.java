@@ -3,11 +3,13 @@ package libs;
 import Visitors.GenericMethodFinder;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.utils.SourceRoot;
 import logic.Validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -50,8 +52,17 @@ public class Utils {
         return finder.recursivelySearchMethodDec(cu, methodName, methodParams);
     }
 
+    /**
+     * given an array of strings, converts it to a string and removes the brackets.
+     * @param stringList the list of strings
+     * @return returns a string without the brackets
+     */
     public static String listToString(List<String> stringList) {
         String ret = stringList.toString();
         return ret.substring(1, ret.length()-1);
     }
+
+
+
+
 }

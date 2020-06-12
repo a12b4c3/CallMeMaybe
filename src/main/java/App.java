@@ -12,7 +12,7 @@ public class App {
     // Give the root of the project here and name of the method to be analyzed.
     private static final String ROOT_DIR = "src/test/java/t1/";
     private static final String CLASS_NAME = "foo";
-    private static final String METHOD_NAME = "calls_one_method";
+    private static final String METHOD_NAME = "calls_two_methods";
     private static final ArrayList<String> METHOD_PARAMS = new ArrayList<String>(){};
 
     public static void main(String[] args) {
