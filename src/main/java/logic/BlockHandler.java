@@ -28,15 +28,15 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
                 ehandler.handle((ExpressionStmt) s);
             } else if (statementClass.equals(Stmt.FOREACH.toString())) {
-
-            } else if (statementClass.equals(Stmt.FOR.toString())) {
-
+                this.diagram.beginLoop("for each");
+            } else if (statementClass.equals(Stmt.FOR.toString()) || statementClass.equals(Stmt.WHILE.toString())) {
+                this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
             } else if (statementClass.equals(Stmt.IF.toString())) {
+                this.diagram.beginIf(((ForStmt) s).getCompare().toString());
+            //} else if (statementClass.equals(Stmt.RETURN.toString())) {
 
-            } else if (statementClass.equals(Stmt.RETURN.toString())) {
-
-            } else if (statementClass.equals(Stmt.WHILE.toString())) {
-
+            // } else if () {
+            // TODO
             } else {
                 System.out.println("Unsupported statement class: " + statementClass);
             }

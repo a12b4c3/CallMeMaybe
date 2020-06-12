@@ -49,18 +49,18 @@ public class SequenceDiagram {
      * if the previous call has not been returned (as it is has a void return method), then
      * this method will be invoked to end the call and reset the accumulators.
      */
-    private void returnVoidCall() {
-        if (this.callNotReturned) {
-            this.stringToPaint.add(String.format("%s-->%s:", this.classB, this.classA));
-            this.resetReturnStatus();
-        }
-    }
-
-    private void resetReturnStatus() {
-        this.callNotReturned = false;
-        this.classA = "";
-        this.classB = "";
-    }
+//    private void returnVoidCall() {
+//        if (this.callNotReturned) {
+//            this.stringToPaint.add(String.format("%s-->%s:", this.classB, this.classA));
+//            this.resetReturnStatus();
+//        }
+//    }
+//
+//    private void resetReturnStatus() {
+//        this.callNotReturned = false;
+//        this.classA = "";
+//        this.classB = "";
+//    }
 
     /**
      * when theres a new call out of the current method (method A) to another method
@@ -70,12 +70,17 @@ public class SequenceDiagram {
      * @param BMethod
      */
     public void addCallAToB(String AParticipant, String BParticipant, String BMethod, String params) {
-        this.returnVoidCall();
         this.stringToPaint.add(String.format("%s->%s:%s(%s)", AParticipant, BParticipant, BMethod, params));
-        this.callNotReturned = true;
         this.classA = AParticipant;
         this.classB = BParticipant;
-        // todo
+    }
+
+    public void addReturn(String AParticipant, String BParticipant, String returnType) {
+        if (returnType.equals("void")) {
+            this.stringToPaint.add(String.format("%s-->%s:", AParticipant, BParticipant));
+        } else {
+            this.stringToPaint.add(String.format("%s-->%s: ret %s", AParticipant, BParticipant, " " + returnType));
+        }
     }
 
     /**
@@ -83,10 +88,10 @@ public class SequenceDiagram {
      * @param BParticipant
      * @param AParticipant
      */
-    public void addReturnCallBToA(String BParticipant, String AParticipant, String msg) {
-        this.stringToPaint.add(String.format("%s-->%s:%s", BParticipant, AParticipant, msg));
-        this.resetReturnStatus();
-    }
+//    public void addReturnCallBToA(String BParticipant, String AParticipant, String msg) {
+//        this.stringToPaint.add(String.format("%s-->%s:%s", BParticipant, AParticipant, msg));
+//        this.resetReturnStatus();
+//    }
 
     /**
      *
@@ -146,18 +151,34 @@ public class SequenceDiagram {
     }
 
     /**
+     * the following calls are boxed in a rectangle indicating a alt.
+     * @param ifCondition the initial condition
+     */
+    public void beginIf(String ifCondition) {
+        this.stringToPaint.add("alt " + ifCondition);
+    }
+
+    /**
+     * dash-lined section for more conditions
+     * @param elseifCondition other conditions, can be empty
+     */
+    public void moreElseIf(String elseifCondition) {
+        this.stringToPaint.add("else " + elseifCondition);
+    }
+
+    /**
+     * ends loops or if-conditions
+     */
+    public void endConditions() {
+        this.stringToPaint.add("end");
+    }
+
+    /**
      * adds a comment into the DSL code that will not be shown on the callgraph
      * @param comment comment string to be added.
      */
     public void addComment(String comment) {
         this.stringToPaint.add("//%s" + comment);
-    }
-
-    /**
-     * calls preceding this are in a loop, calls following this ar no longer looping.
-     */
-    public void endLoop() {
-        this.stringToPaint.add("end");
     }
 
     /**
@@ -167,7 +188,7 @@ public class SequenceDiagram {
      */
     public String finishDiagram() {
         if (this.callNotReturned) {
-            this.returnVoidCall();
+//            this.returnVoidCall();
         }
         return String.join("\n", this.stringToPaint);
     }

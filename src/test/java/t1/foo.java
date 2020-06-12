@@ -5,18 +5,19 @@ package t1;
  */
 
 public class foo {
-    public void calls_one_method() {
+    public String calls_one_method() {
         System.out.printf("supposed to ignore this");
         System.out.printf("call bazz next");
         int number = this.bazz();
         int number2 = this.bazz(3, "s");
         this.biff();
         System.out.println("the number is " + number);
+        return "hello!";
     }
 
     public void calls_two_methods() {
         System.out.println("this will call two methods");
-        calls_one_method();
+        String hello = this.calls_one_method();
         System.out.println("shouldve called two methods");
     }
 

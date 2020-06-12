@@ -1,13 +1,9 @@
 package Visitors;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.visitor.GenericVisitorAdapter;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +61,8 @@ public class GenericMethodFinder extends GenericVisitorAdapter<MethodDeclaration
             MethodDeclaration md = (MethodDeclaration) n;
             List<String> nparams = new ArrayList<String>();
             for (int i = 0; i<md.getParameters().size(); i++) {
-                nparams.add(md.getParameter(i).getTypeAsString());
+//                nparams.add(md.getParameter(i).getTypeAsString());
+                nparams.add(md.getParameter(i).getType().toString());
             }
             return params.equals(nparams);
         }
