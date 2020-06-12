@@ -147,7 +147,7 @@ public class SequenceDiagram {
      * @param loopCondition may be left empty, include the continue condition.
      */
     public void beginLoop(String loopCondition) {
-        this.stringToPaint.add("loop " + loopCondition);
+        this.stringToPaint.add("loop" + " " + loopCondition);
     }
 
     /**
@@ -155,7 +155,7 @@ public class SequenceDiagram {
      * @param ifCondition the initial condition
      */
     public void beginIf(String ifCondition) {
-        this.stringToPaint.add("alt " + ifCondition);
+        this.stringToPaint.add("alt" + " " + ifCondition);
     }
 
     /**
@@ -163,7 +163,7 @@ public class SequenceDiagram {
      * @param elseifCondition other conditions, can be empty
      */
     public void moreElseIf(String elseifCondition) {
-        this.stringToPaint.add("else " + elseifCondition);
+        this.stringToPaint.add("else" + " " + elseifCondition);
     }
 
     /**

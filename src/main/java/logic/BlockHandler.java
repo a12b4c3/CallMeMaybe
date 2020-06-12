@@ -29,13 +29,17 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 ehandler.handle((ExpressionStmt) s);
             } else if (statementClass.equals(Stmt.FOREACH.toString())) {
                 this.diagram.beginLoop("for each");
+                handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements());
+                this.diagram.endConditions();
             } else if (statementClass.equals(Stmt.FOR.toString()) || statementClass.equals(Stmt.WHILE.toString())) {
                 this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
+                handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements());
+                this.diagram.endConditions();
             } else if (statementClass.equals(Stmt.IF.toString())) {
-                this.diagram.beginIf(((ForStmt) s).getCompare().toString());
-            //} else if (statementClass.equals(Stmt.RETURN.toString())) {
-
-            // } else if () {
+                this.diagram.beginIf(((IfStmt) s).getCondition().toString());
+                handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements());
+                handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements());
+                this.diagram.endConditions();
             // TODO
             } else {
                 System.out.println("Unsupported statement class: " + statementClass);

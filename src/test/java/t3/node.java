@@ -5,18 +5,28 @@ package t3;
  */
 public class node {
     public void loop_five_times() {
-        for (int i=0; i<5; i++) {
-            System.out.printf("im looping");
+        for (int i = 0; i < 5; i++) {
+            if (i == 2) {
+                System.out.printf("another line here");
+            } else if (i == 3) {
+                System.out.printf("another line there");
+            } else {
+                this.loop_this();
+            }
         }
+    }
+
+    public void loop_this() {
+        System.out.printf("im looping");
     }
 
     public void calls_something_that_loops() {
         System.out.printf("start of function");
-        loop_five_times();
+        this.loop_five_times();
     }
 
     public void calls_something_else_that_loops() {
         System.out.printf("start of function");
-        calls_something_that_loops();
+        this.calls_something_that_loops();
     }
 }
