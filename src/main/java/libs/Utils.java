@@ -5,6 +5,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.utils.SourceRoot;
 import logic.Validator;
@@ -62,7 +63,30 @@ public class Utils {
         return ret.substring(1, ret.length()-1);
     }
 
+    /**
+     * given a javaparser node, will go through the tree and find all nodes of type
+     * MethodCallExpr
+     * @param e node
+     * @param collector empty list to be added to, change only via sideeffect.
+     */
 
+    public static void recursiveMethodCallFinder(Node e, List<MethodCallExpr> collector) {
+        if (e.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+            collector.add((MethodCallExpr) e);
+        }
+        List<Node> children = e.getChildNodes();
+        if (children.size() != 0) {
+            for(Node child: children){
+                recursiveMethodCallFinder(child, collector);
+            }
+        }
+    }
 
-
+    public static String nodeListParamsToArrayList(NodeList<Parameter> nodeList) {
+        List<String> ret = new ArrayList<>();
+        for (int i = 0; i < nodeList.size(); i++) {
+            ret.add(nodeList.get(i).getTypeAsString());
+        }
+        return Utils.listToString(ret);
+    }
 }

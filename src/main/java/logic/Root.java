@@ -10,6 +10,7 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.utils.SourceRoot;
 import libs.SequenceDiagram;
 import libs.Utils;
+import model.Method;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,6 +28,7 @@ public class Root {
     String methodName;
     List<String> methodParams;
     SequenceDiagram diagram;
+    Method entryNode;
 
     public Root(Path path) throws IOException {
         this.path = path;
@@ -41,10 +43,8 @@ public class Root {
         this.className = className;
         this.methodName = methodName;
         this.methodParams = methodParams;
-        this.findLocalClasses();
-        this.initializeDiagram();
-        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName, this.methodParams);
-        mHandler.handleMethod();
+        this.entryNode = new Method(Utils.getMethodDeclarationFromClass(sourceRoot, className, methodName, methodParams), className);
+        this.entryNode.build();
     }
 
     private void initializeDiagram() {

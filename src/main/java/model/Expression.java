@@ -4,7 +4,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 
 
-public class Expression {
+public class Expression implements Node{
     private String currClassName;
     private String currMethodName;
 
@@ -13,6 +13,11 @@ public class Expression {
     private String toMethodParams;
 
     public Expression(MethodCallExpr callExpr) {
+
+    }
+
+    @Override
+    public void build() {
 
     }
 }
