@@ -17,7 +17,7 @@ public class SequenceDiagram {
 
     // following fields are used to determine if the previous call has been returned (ie. for
     // both void or parameterized returns)
-    private boolean callNotReturned = true;
+    private boolean callNotReturned = false;
     private String classA = "";
     private String classB = "";
 
@@ -69,9 +69,9 @@ public class SequenceDiagram {
      * @param BParticipant
      * @param BMethod
      */
-    public void addCallAToB(String AParticipant, String BParticipant, String BMethod) {
+    public void addCallAToB(String AParticipant, String BParticipant, String BMethod, String params) {
         this.returnVoidCall();
-        this.stringToPaint.add(String.format("%s->%s:%s()", AParticipant, BParticipant, BMethod));
+        this.stringToPaint.add(String.format("%s->%s:%s(%s)", AParticipant, BParticipant, BMethod, params));
         this.callNotReturned = true;
         this.classA = AParticipant;
         this.classB = BParticipant;
@@ -158,6 +158,18 @@ public class SequenceDiagram {
      */
     public void endLoop() {
         this.stringToPaint.add("end");
+    }
+
+    /**
+     * checks if the last input was returned.
+     * returns the final string to be used as input for sequencediagram.org
+     * @return
+     */
+    public String finishDiagram() {
+        if (this.callNotReturned) {
+            this.returnVoidCall();
+        }
+        return String.join("\n", this.stringToPaint);
     }
 
     public void clear() {
