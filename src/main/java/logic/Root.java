@@ -55,6 +55,12 @@ public class Root {
         this.diagram.addEntryPoint(this.className, this.methodName);
     }
 
+    public String finishDiagram() {
+        // todo call concat diagram with newlines
+        // return string
+        return null;
+    }
+
     private void findLocalClasses() {
         VoidClassNameCollector classNameCollector = new VoidClassNameCollector();
         for(CompilationUnit cu: this.compilations) {

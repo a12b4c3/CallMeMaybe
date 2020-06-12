@@ -15,6 +15,12 @@ public class SequenceDiagram {
     private String entry = null;
     private boolean activationOn = false;
 
+    // following fields are used to determine if the previous call has been returned (ie. for
+    // both void or parameterized returns)
+    private boolean callNotReturned = true;
+    private String classA = "";
+    private String classB = "";
+
     private SequenceDiagram() {
 
     }
@@ -40,13 +46,35 @@ public class SequenceDiagram {
     }
 
     /**
+     * if the previous call has not been returned (as it is has a void return method), then
+     * this method will be invoked to end the call and reset the accumulators.
+     */
+    private void returnVoidCall() {
+        if (this.callNotReturned) {
+            this.stringToPaint.add(String.format("%s-->%s:", this.classB, this.classA));
+            this.resetReturnStatus();
+        }
+    }
+
+    private void resetReturnStatus() {
+        this.callNotReturned = false;
+        this.classA = "";
+        this.classB = "";
+    }
+
+    /**
      * when theres a new call out of the current method (method A) to another method
      *         - BParticipant can be to itself (A) or to some other participant(B)
      * @param AParticipant
      * @param BParticipant
      * @param BMethod
      */
-    public void addVoidCallAToB(String AParticipant, String BParticipant, String BMethod) {
+    public void addCallAToB(String AParticipant, String BParticipant, String BMethod) {
+        this.returnVoidCall();
+        this.stringToPaint.add(String.format("%s->%s:%s()", AParticipant, BParticipant, BMethod));
+        this.callNotReturned = true;
+        this.classA = AParticipant;
+        this.classB = BParticipant;
         // todo
     }
 
@@ -55,8 +83,9 @@ public class SequenceDiagram {
      * @param BParticipant
      * @param AParticipant
      */
-    public void addReturnCallBToA(String BParticipant, String AParticipant) {
-        // todo
+    public void addReturnCallBToA(String BParticipant, String AParticipant, String msg) {
+        this.stringToPaint.add(String.format("%s-->%s:%s", BParticipant, AParticipant, msg));
+        this.resetReturnStatus();
     }
 
     /**
@@ -137,4 +166,5 @@ public class SequenceDiagram {
         this.entry = null;
         this.title = null;
     }
+
 }

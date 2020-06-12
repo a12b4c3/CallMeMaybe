@@ -39,7 +39,7 @@ public class ExpressionHandler {
 
     private void handle(MethodCallExpr mCallExpr) {
         if (Utils.callInScope(mCallExpr, Expr.THIS)) {
-            // todo draw a->a: <methodname>
+            diagram.addCallAToB(currClass, currClass, mCallExpr.getNameAsString());
             List<String> mparams = this.getParamListFromMethodCall(mCallExpr);
             MethodHandler mhandler = new MethodHandler(this.root, this.currClass, mCallExpr.getName().toString(), mparams);
             Validator.validateNotNull(mhandler);

@@ -19,7 +19,7 @@ public class App {
         try {
             Root root = new Root(Paths.get(ROOT_DIR));
             root.start(CLASS_NAME, METHOD_NAME, METHOD_PARAMS);
-
+            root.finishDiagram();
         } catch (IOException e) {
             e.printStackTrace();
         }
