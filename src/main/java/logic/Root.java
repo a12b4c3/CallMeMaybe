@@ -8,6 +8,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.utils.SourceRoot;
+import libs.Client;
 import libs.SequenceDiagram;
 import libs.Utils;
 
@@ -55,10 +56,10 @@ public class Root {
         this.diagram.addEntryPoint(this.className, this.methodName);
     }
 
-    public String finishDiagram() {
-        // todo call concat diagram with newlines
-        // return string
-        return null;
+    public void finishDiagram() {
+        Client c = new Client(null);
+        String clientInput = this.diagram.finishDiagram();
+        c.sendPostAndDraw(clientInput);
     }
 
     private void findLocalClasses() {

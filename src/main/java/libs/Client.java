@@ -18,11 +18,14 @@ import java.io.*;
 public class Client {
     CloseableHttpClient client;
     String url;
+    private final String defaultLoopBackEndpoint = "http://127.0.0.1:8080/api/v7/generateDiagramImage";
 
-    public Client(String urlStr) {
-
+    public Client(String urlStrOrNullLoopback) {
+        if (urlStrOrNullLoopback.equals(null)) {
+            this.url = this.defaultLoopBackEndpoint;
+        }
         this.client = HttpClientBuilder.create().build();
-        this.url = urlStr;
+        this.url = urlStrOrNullLoopback;
     }
 
     public void sendPostAndDraw(String msg) {
