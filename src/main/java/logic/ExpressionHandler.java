@@ -63,6 +63,8 @@ public class ExpressionHandler {
             Validator.validateNotNull(mhandler);
             mhandler.handleMethod();
 
+            this.diagram.addReturn(currClass,currClass, mhandler.getReturnType());
+
         } else {
             // figure out what the scope is
             // check if scope is in the current project

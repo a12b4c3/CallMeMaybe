@@ -58,6 +58,7 @@ public class Root {
         this.initializeDiagram();
         MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName, this.methodParams ,this.myTypeSolver);
         mHandler.handleMethod();
+        this.diagram.addReturn(className,className, mHandler.getReturnType());
     }
 
 
