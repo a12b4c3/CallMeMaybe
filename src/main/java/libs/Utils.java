@@ -35,9 +35,23 @@ public class Utils {
         return null;
     }
 
-    public static MethodDeclaration getMethodDeclarationFromClass(SourceRoot root, String className, String methodName) {
+    /**
+     * gets the MethodDeclaration node from a root file, with the specified classname, methodname, and
+     * method parameters.
+     * @param root
+     * @param className
+     * @param methodName
+     * @param methodParams
+     * @return
+     */
+    public static MethodDeclaration getMethodDeclarationFromClass(SourceRoot root, String className, String methodName, List<String> methodParams) {
         CompilationUnit cu = Utils.retrieveTargetCU(root.getCompilationUnits(), className);
         GenericMethodFinder finder = new GenericMethodFinder();
-        return finder.visit(cu, methodName);
+        return finder.recursivelySearchMethodDec(cu, methodName, methodParams);
+    }
+
+    public static String listToString(List<String> stringList) {
+        String ret = stringList.toString();
+        return ret.substring(1, ret.length()-1);
     }
 }

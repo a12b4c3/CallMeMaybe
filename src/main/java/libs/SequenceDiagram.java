@@ -15,6 +15,12 @@ public class SequenceDiagram {
     private String entry = null;
     private boolean activationOn = false;
 
+    // following fields are used to determine if the previous call has been returned (ie. for
+    // both void or parameterized returns)
+    private boolean callNotReturned = false;
+    private String classA = "";
+    private String classB = "";
+
     private SequenceDiagram() {
 
     }
@@ -40,19 +46,40 @@ public class SequenceDiagram {
     }
 
     /**
+     * if the previous call has not been returned (as it is has a void return method), then
+     * this method will be invoked to end the call and reset the accumulators.
+     */
+//    private void returnVoidCall() {
+//        if (this.callNotReturned) {
+//            this.stringToPaint.add(String.format("%s-->%s:", this.classB, this.classA));
+//            this.resetReturnStatus();
+//        }
+//    }
+//
+//    private void resetReturnStatus() {
+//        this.callNotReturned = false;
+//        this.classA = "";
+//        this.classB = "";
+//    }
+
+    /**
      * when theres a new call out of the current method (method A) to another method
      *         - BParticipant can be to itself (A) or to some other participant(B)
      * @param AParticipant
      * @param BParticipant
      * @param BMethod
      */
-    public void addVoidCallAToB(String AParticipant, String BParticipant, String BMethod) {
-        // TODO: add in between the middle of existing method calls
-        if (AParticipant != null && BParticipant != null && BMethod != null) {
-            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":" + BMethod + "()");
-            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":");
+    public void addCallAToB(String AParticipant, String BParticipant, String BMethod, String params) {
+        this.stringToPaint.add(String.format("%s->%s:%s(%s)", AParticipant, BParticipant, BMethod, params));
+        this.classA = AParticipant;
+        this.classB = BParticipant;
+    }
+
+    public void addReturn(String AParticipant, String BParticipant, String returnType) {
+        if (returnType.equals("void")) {
+            this.stringToPaint.add(String.format("%s-->%s:", AParticipant, BParticipant));
         } else {
-            // throw exception?
+            this.stringToPaint.add(String.format("%s-->%s: ret %s", AParticipant, BParticipant, " " + returnType));
         }
     }
 
@@ -61,15 +88,10 @@ public class SequenceDiagram {
      * @param BParticipant
      * @param AParticipant
      */
-    public void addReturnCallBToA(String BParticipant, String AParticipant, String BMethod, String returnType) {
-        // TODO: add in between the middle of existing method calls
-        if (AParticipant != null && BParticipant != null && BMethod != null) {
-            this.stringToPaint.add(AParticipant + "->" + BParticipant + ":" + BMethod + "()");
-            this.stringToPaint.add(AParticipant + "->" + BParticipant + ": ret " + returnType);
-        } else {
-            // throw exception?
-        }
-    }
+//    public void addReturnCallBToA(String BParticipant, String AParticipant, String msg) {
+//        this.stringToPaint.add(String.format("%s-->%s:%s", BParticipant, AParticipant, msg));
+//        this.resetReturnStatus();
+//    }
 
     /**
      *
@@ -125,7 +147,7 @@ public class SequenceDiagram {
      * @param loopCondition may be left empty, include the continue condition.
      */
     public void beginLoop(String loopCondition) {
-        this.stringToPaint.add("loop " + loopCondition);
+        this.stringToPaint.add("loop" + " " + loopCondition);
     }
 
     /**
@@ -133,7 +155,7 @@ public class SequenceDiagram {
      * @param ifCondition the initial condition
      */
     public void beginIf(String ifCondition) {
-        this.stringToPaint.add("alt " + ifCondition);
+        this.stringToPaint.add("alt" + " " + ifCondition);
     }
 
     /**
@@ -141,7 +163,7 @@ public class SequenceDiagram {
      * @param elseifCondition other conditions, can be empty
      */
     public void moreElseIf(String elseifCondition) {
-        this.stringToPaint.add("else " + elseifCondition);
+        this.stringToPaint.add("else" + " " + elseifCondition);
     }
 
     /**
@@ -159,10 +181,23 @@ public class SequenceDiagram {
         this.stringToPaint.add("//%s" + comment);
     }
 
+    /**
+     * checks if the last input was returned.
+     * returns the final string to be used as input for sequencediagram.org
+     * @return
+     */
+    public String finishDiagram() {
+        if (this.callNotReturned) {
+//            this.returnVoidCall();
+        }
+        return String.join("\n", this.stringToPaint);
+    }
+
     public void clear() {
         this.participants.clear();
         this.stringToPaint.clear();
         this.entry = null;
         this.title = null;
     }
+
 }

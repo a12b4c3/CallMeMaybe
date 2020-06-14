@@ -24,7 +24,9 @@ public enum Stmt implements StrConst {
     THROW("ThrowStmt"),
     TRY("TryStmt"),
     UNPARSABLE("UnparsableStmt"),
-    WHILE("WhileStmt");                                 // support this
+    WHILE("WhileStmt"),                                 // support this
+    ELSEIF("thenStmt"),                                 // support this
+    ELSE("elseStmt");                                   // support this
 
     private String type;
 

@@ -12,31 +12,37 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
     String currClass;
     SequenceDiagram diagram;
     SourceRoot root;
+    MyTypeSolver myTypeSolver;
 
-    public BlockHandler(String currClass, SourceRoot root) {
+    public BlockHandler(String currClass, SourceRoot root, MyTypeSolver myTypeSolver) {
         this.diagram = SequenceDiagram.getSequenceDiagram();
         this.currClass = currClass;
         this.root = root;
+        this.myTypeSolver = myTypeSolver;
     }
 
     public void handleStatements(NodeList<Statement> statements) {
         for(Statement s: statements) {
             String statementClass = s.getClass().getSimpleName();
             if (statementClass.equals(Stmt.CONSTRUCTOR.toString())) {
+
             } else if (statementClass.equals(Stmt.EXPRESSION.toString())) {
-                ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root,this.myTypeSolver);
                 ehandler.handle((ExpressionStmt) s);
-                // TODO: need to fix
             } else if (statementClass.equals(Stmt.FOREACH.toString())) {
-                this.diagram.beginLoop("TODO");
+                this.diagram.beginLoop("for each");
+                handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements());
+                this.diagram.endConditions();
             } else if (statementClass.equals(Stmt.FOR.toString()) || statementClass.equals(Stmt.WHILE.toString())) {
                 this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
+                handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements());
+                this.diagram.endConditions();
             } else if (statementClass.equals(Stmt.IF.toString())) {
-                this.diagram.beginIf("TODO");
-                // todo: and else-if for ELSEIF?
-//            } else if () {
-            } else if (statementClass.equals(Stmt.RETURN.toString())) {
-                this.diagram.addReturnCallBToA("A", "B", "C", "int");
+                this.diagram.beginIf(((IfStmt) s).getCondition().toString());
+                handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements());
+                handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements());
+                this.diagram.endConditions();
+                // TODO
             } else {
                 System.out.println("Unsupported statement class: " + statementClass);
             }
