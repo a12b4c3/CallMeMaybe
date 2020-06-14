@@ -3,16 +3,27 @@ package logic;
 import Visitors.GenericMethodFinder;
 import Visitors.VoidClassNameCollector;
 import com.github.javaparser.ParseResult;
+import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.resolution.types.ResolvedType;
+import com.github.javaparser.symbolsolver.JavaSymbolSolver;
+import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
+import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
+import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.github.javaparser.utils.SourceRoot;
 import libs.SequenceDiagram;
 import libs.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +38,7 @@ public class Root {
     String methodName;
     List<String> methodParams;
     SequenceDiagram diagram;
+    MyTypeSolver myTypeSolver;
 
     public Root(Path path) throws IOException {
         this.path = path;
@@ -41,11 +53,14 @@ public class Root {
         this.className = className;
         this.methodName = methodName;
         this.methodParams = methodParams;
+        this.myTypeSolver = new MyTypeSolver(this.path,this.className,this.methodName,methodParams);
         this.findLocalClasses();
         this.initializeDiagram();
-        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName, this.methodParams);
+        MethodHandler mHandler = new MethodHandler(this.sourceRoot, this.className, this.methodName, this.methodParams ,this.myTypeSolver);
         mHandler.handleMethod();
     }
+
+
 
     private void initializeDiagram() {
         this.diagram.clear();

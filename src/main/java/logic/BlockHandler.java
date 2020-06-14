@@ -12,11 +12,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
     String currClass;
     SequenceDiagram diagram;
     SourceRoot root;
+    MyTypeSolver myTypeSolver;
 
-    public BlockHandler(String currClass, SourceRoot root) {
+    public BlockHandler(String currClass, SourceRoot root, MyTypeSolver myTypeSolver) {
         this.diagram = SequenceDiagram.getSequenceDiagram();
         this.currClass = currClass;
         this.root = root;
+        this.myTypeSolver = myTypeSolver;
     }
 
     public void handleStatements(NodeList<Statement> statements) {
@@ -25,9 +27,10 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
             if (statementClass.equals(Stmt.CONSTRUCTOR.toString())) {
 
             } else if (statementClass.equals(Stmt.EXPRESSION.toString())) {
-                ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root,this.myTypeSolver);
                 ehandler.handle((ExpressionStmt) s);
             } else if (statementClass.equals(Stmt.FOREACH.toString())) {
+
                 this.diagram.beginLoop("for each elements");
                 handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements());
                 this.diagram.endLoop();
@@ -39,11 +42,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 handleIfElse(s);
             } else if (statementClass.equals(Stmt.BLOCK.toString())) {
                 this.diagram.endConditions();
+
             } else {
                 System.out.println("Unsupported statement class: " + statementClass);
             }
         }
     }
+
 
     private void handleIfElse (Statement s) {
         int num = ((IfStmt) s).getElseStmt().get().getChildNodes().size();
@@ -93,3 +98,5 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
     // 4 nested if: extracted from a different way -> 1
         // go to 1
 }
+=======
+

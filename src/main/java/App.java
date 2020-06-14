@@ -1,3 +1,4 @@
+
 import libs.SequenceDiagram;
 import logic.Root;
 
@@ -10,9 +11,11 @@ public class App {
     private SequenceDiagram sd = SequenceDiagram.getSequenceDiagram();
 
     // Give the root of the project here and name of the method to be analyzed.
+
     private static final String ROOT_DIR = "src/test/java/t3/";
     private static final String CLASS_NAME = "node";
     private static final String METHOD_NAME = "loop_five_times";
+
     private static final ArrayList<String> METHOD_PARAMS = new ArrayList<String>(){};
 
     public static void main(String[] args) {

@@ -17,8 +17,9 @@ public class MethodHandler {
     private List<String> methodParams;
     private MethodDeclaration methodNode;
     private String returnType;
+    private MyTypeSolver myTypeSolver;
 
-    public MethodHandler(SourceRoot root, String className, String methodName, List<String> methodParams) {
+    public MethodHandler(SourceRoot root, String className, String methodName, List<String> methodParams ,MyTypeSolver myTypeSolver) {
         this.diagram = SequenceDiagram.getSequenceDiagram();
         this.root = root;
         this.currClass = className;
@@ -27,14 +28,22 @@ public class MethodHandler {
         this.methodNode = Utils.getMethodDeclarationFromClass(this.root, this.currClass, this.currMethod, this.methodParams);
         this.returnType = methodNode.getType().toString();
         // this.returnType = methodNode.getTypeAsString();
+        this.myTypeSolver = myTypeSolver;
+
     }
 
     public void handleMethod() {
         NodeList<Statement> statements = methodNode.getBody().get().getStatements();
         Validator.validateNotNull(statements);
-        BlockHandler blockHandler = new BlockHandler(this.currClass, this.root);
+        BlockHandler blockHandler = new BlockHandler(this.currClass, this.root, this.myTypeSolver);
         blockHandler.handleStatements(statements);
-        this.diagram.addReturn(currClass, currClass, this.returnType);
+
+        //if(this.returnType != null)
+            //this.diagram.addReturn(currClass, currClass, this.returnType);
+    }
+
+    public String getReturnType(){
+        return this.returnType;
     }
 
 

@@ -9,12 +9,12 @@ public class foo extends moo {
 
     public void calls_one_other_class_no_return() {
         bar b = new bar();
-        int a = 0;
+        int a;
+        a = 0;
         a += 5;
         System.out.println("im going to bar class");
         b.call_me_no_return();
         System.out.println("ive returned to foo class");
-        hello();
     }
 
     public int calls_one_other_class_no_return(int c) {

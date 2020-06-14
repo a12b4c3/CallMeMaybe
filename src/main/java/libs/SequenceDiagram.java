@@ -22,7 +22,9 @@ public class SequenceDiagram {
 
     // following fields are used to determine if the previous call has been returned (ie. for
     // both void or parameterized returns)
+
     public boolean elseStatement = false;
+
     private boolean callNotReturned = false;
     private String classA = "";
     private String classB = "";
@@ -163,6 +165,7 @@ public class SequenceDiagram {
     public void beginIf(String ifCondition) {
         this.stringToPaint.add("alt" + " " + ifCondition);
         this.elseStatement = true;
+
     }
 
     /**
@@ -176,6 +179,7 @@ public class SequenceDiagram {
     /**
      * ends loops or if-conditions
      */
+
     public void endLoop() {
         this.stringToPaint.add("end");
     }
@@ -186,6 +190,7 @@ public class SequenceDiagram {
     public void endConditions() {
         this.stringToPaint.add("end");
         this.elseStatement = false;
+
     }
 
     /**
