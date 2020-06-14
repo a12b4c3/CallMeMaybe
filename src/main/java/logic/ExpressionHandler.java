@@ -20,7 +20,6 @@ public class ExpressionHandler {
     String currClass;
     SourceRoot root;
     MyTypeSolver myTypeSolver;
-    HashMap<String,String> types;
 
     public ExpressionHandler(String currClass, SourceRoot root, MyTypeSolver myTypeSolver) {
         this.diagram = SequenceDiagram.getSequenceDiagram();
@@ -44,8 +43,7 @@ public class ExpressionHandler {
         if(expClass.equals(Expr.VARIABLE_DEC.toString())) {
             String[] strs = exp.toString().split(" ");
             String var = strs[1];
-            this.types = this.myTypeSolver.getTypes();
-            String type = this.types.get(var);
+            String type = this.myTypeSolver.tryResolveTypeInMethod(var);
             if(strs.length > 2 && strs[3].equals("new")){
                 //this is only invoked if the expression contains new XXX()
                 handleConstruction(var,type);
@@ -67,34 +65,52 @@ public class ExpressionHandler {
             // figure out what the scope is
             // check if scope is in the current project
             // create new node and jump to
-            this.types = this.myTypeSolver.getTypes();
-            if(this.types.containsKey(mCallExpr.getScope().get().toString()) != false) {
+            String targetClass;
+            String currMethod = this.myTypeSolver.getTargetMethod();
+            List<String> currMethodParam = this.myTypeSolver.getTargetMethodParam();
+            if(this.myTypeSolver.tryResolveTypeInMethod(mCallExpr.getScope().get().toString()) != null) {
+                //check if the variable to be solved can be solved in Method level
+                targetClass = this.myTypeSolver.tryResolveTypeInMethod(mCallExpr.getScope().get().toString());
+                this.myTypeSolver.setTargetClass(targetClass);
                 List<String> mparams = this.getParamListFromMethodCall(mCallExpr);
                 this.myTypeSolver.setTargetMethod(mCallExpr.getNameAsString(),mparams);
-                diagram.addCallAToB(currClass, this.types.get(mCallExpr.getScope().get().toString()), mCallExpr.getNameAsString(), Utils.listToString(mparams));
-                MethodHandler mhandler = new MethodHandler(this.root, this.types.get(mCallExpr.getScope().get().toString()), mCallExpr.getName().toString(), mparams ,this.myTypeSolver);
+                diagram.addCallAToB(currClass, targetClass, mCallExpr.getNameAsString(), Utils.listToString(mparams));
+                MethodHandler mhandler = new MethodHandler(this.root, targetClass, mCallExpr.getName().toString(), mparams ,this.myTypeSolver);
                 Validator.validateNotNull(mhandler);
                 mhandler.handleMethod();
-                this.diagram.addReturn(this.types.get(mCallExpr.getScope().get().toString()), currClass, mhandler.getReturnType());
+                this.diagram.addReturn(targetClass, currClass, mhandler.getReturnType());
+            } else if(this.myTypeSolver.tryResolveTypeInClass(mCallExpr.getScope().get().toString()) != null) {
+                //check if the variable to be solved is located in class fields level
+                targetClass = this.myTypeSolver.tryResolveTypeInClass(mCallExpr.getScope().get().toString());
+                this.myTypeSolver.setTargetClass(targetClass);
+                List<String> mparams = this.getParamListFromMethodCall(mCallExpr);
+                this.myTypeSolver.setTargetMethod(mCallExpr.getNameAsString(),mparams);
+                diagram.addCallAToB(currClass, targetClass, mCallExpr.getNameAsString(), Utils.listToString(mparams));
+                MethodHandler mhandler = new MethodHandler(this.root, targetClass, mCallExpr.getName().toString(), mparams ,this.myTypeSolver);
+                Validator.validateNotNull(mhandler);
+                mhandler.handleMethod();
+                this.diagram.addReturn(targetClass, currClass, mhandler.getReturnType());
             }
+
+            this.myTypeSolver.setTargetClass(currClass);
+            this.myTypeSolver.setTargetMethod(currMethod,currMethodParam);
         }
     }
 
     private void handleConstruction(String var, String type) {
         //this.myTypeSolver.setTargetClass(type);
         //this.myTypeSolver.resolveType();
-
-        if(this.myTypeSolver.getInitMethod() != null) {
+//        if(this.myTypeSolver.tryGetInitMethod(type) != null) {
             //if the class Contains a Constructor then we need to check if there is additional calls involved.
             //MethodHandler mHandler = new MethodHandler(this.root, type, type, this.myTypeSolver);
             //mHandler.handleMethod();
-        } else {
+//        } else {
             //TODO
             // Add it create call and add return call
-            this.diagram.addCallAToB(this.currClass, type, "new "+type, "()" );
+            this.diagram.addCallAToB(this.currClass, type, " new "+type, "()" );
             this.diagram.addReturn(type,this.currClass, "");
 
-        }
+ //       }
     }
 
     private void recursiveMethodCallFinder(Node e, List<MethodCallExpr> collector) {

@@ -31,7 +31,6 @@ public class MyTypeSolver {
     private String targetMethod;
     private List<String> methodParams;
     List<CompilationUnit> compilations;
-    private HashMap<String, String> types;
     private CompilationUnit targetCu;
     MethodDeclaration initMethod = null;
 
@@ -40,7 +39,6 @@ public class MyTypeSolver {
         this.targetClass = targetClass;
         this.targetMethod = targetMethod;
         this.methodParams = methodParams;
-        this.types = new HashMap<String, String>();
         try{
             startConfiguration();
         }catch (IOException e) {
@@ -67,12 +65,12 @@ public class MyTypeSolver {
 
         setTargetCu();
 
-        resolveType();
-
     }
 
-    public void resolveType(){
-        GenericMethodFinder mfinder = new GenericMethodFinder();
+
+    public String tryResolveTypeInMethod(String toBeSolved){
+        HashMap<String,String> types = new HashMap<String, String>();
+
         try {
             this.initMethod = Utils.getMethodDeclarationFromClass(this.sourceRoot, this.targetClass, this.targetMethod, this.methodParams);
             this.initMethod.findAll(AssignExpr.class).forEach(ae -> {
@@ -88,15 +86,18 @@ public class MyTypeSolver {
             System.out.println("method is not found or construction is not found");
         }
 
-        this.targetCu.findAll(FieldDeclaration.class).forEach(fd -> {
-            types.put(fd.getVariables().get(0).getName().toString(),fd.getVariables().get(0).getType().toString());
-        });
-
-        this.initMethod = null;
+        return types.get(toBeSolved);
     }
 
-    public HashMap<String,String> getTypes(){
-        return this.types;
+    public String tryResolveTypeInClass(String toBeSolved){
+
+        HashMap<String,String> types = new HashMap<String,String>();
+
+            this.targetCu.findAll(FieldDeclaration.class).forEach(fd -> {
+                types.put(fd.getVariables().get(0).getName().toString(),fd.getVariables().get(0).getType().toString());
+            });
+
+        return types.get(toBeSolved);
     }
 
 
@@ -118,8 +119,16 @@ public class MyTypeSolver {
         this.methodParams = methodParams;
     }
 
-    public MethodDeclaration getInitMethod(){
-        return this.initMethod;
+    public String getTargetMethod(){
+        return this.targetMethod;
+    }
+
+    public List<String> getTargetMethodParam(){
+        return this.methodParams;
+    }
+
+    public MethodDeclaration tryGetInitMethod(String method){
+        return Utils.getMethodDeclarationFromClass(this.sourceRoot, this.targetClass, method, this.methodParams);
     }
 
 
