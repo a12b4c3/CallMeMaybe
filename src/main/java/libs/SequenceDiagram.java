@@ -9,6 +9,11 @@ import java.util.Set;
  */
 public class SequenceDiagram {
     private static SequenceDiagram instance = null;
+
+    public ArrayList<String> getStringToPaint() {
+        return stringToPaint;
+    }
+
     private ArrayList<String> stringToPaint = new ArrayList<String>();
     private Set<String> participants = new HashSet<String>();
     private String title = null;
