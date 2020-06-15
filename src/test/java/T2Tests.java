@@ -40,7 +40,7 @@ public class T2Tests {
                 "foo->bar: new bar()",
                 "bar-->foo: ret",
                 "foo->bar:call_me_no_return()",
-                "bar-->foo: ret",
+                "bar-->foo",
                 "foo-->foo"));
         try {
             Root root = new Root(Paths.get(ROOT_DIR));
@@ -59,18 +59,18 @@ public class T2Tests {
         METHOD_NAME = "calls_two_other_classes_mixed_returns";
         METHOD_PARAMS.clear();
         ArrayList<String> expected = new ArrayList<String>(Arrays.asList(
-                "calls_two_other_classes_mixed_returns()",
+                "title calls_two_other_classes_mixed_returns()",
                 "autoactivation on",
                 "participant foo",
                 "[->foo:calls_two_other_classes_mixed_returns()",
                 "foo->bar: new bar()",
-                "bar->foo: ret",
-                "foo-->bar:call_me_with_return",
+                "bar-->foo: ret  ",
+                "foo->bar:call_me_with_return()",
                 "bar-->foo: ret  int",
                 "foo->baz: new baz()",
-                "baz-->foo: ret",
+                "baz-->foo: ret  ",
                 "foo->baz:call_me_with_return()",
-                "baz-->foo:ret  int",
+                "baz-->foo: ret  int",
                 "foo-->foo:"));
         try {
             Root root = new Root(Paths.get(ROOT_DIR));

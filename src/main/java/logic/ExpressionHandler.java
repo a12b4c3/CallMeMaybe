@@ -35,9 +35,13 @@ public class ExpressionHandler {
     public void handle(ExpressionStmt stmt) {
         Expression exp = stmt.getExpression();
         List<MethodCallExpr> collector = new ArrayList<MethodCallExpr>();
-        recursiveMethodCallFinder(exp, collector);
-        for(MethodCallExpr mCallExpr: collector) {
-            handle(mCallExpr);
+        try {
+            recursiveMethodCallFinder(exp, collector);
+            for (MethodCallExpr mCallExpr : collector) {
+                handle(mCallExpr);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
         String expClass = exp.getClass().getSimpleName();
         if(expClass.equals(Expr.VARIABLE_DEC.toString())) {
@@ -48,7 +52,6 @@ public class ExpressionHandler {
                 //this is only invoked if the expression contains new XXX()
                 handleConstruction(var,type);
             }
-
             //else then expression is just variable declaration. ignore it.
         }
     }
@@ -132,7 +135,17 @@ public class ExpressionHandler {
     private List<String> getParamListFromMethodCall(MethodCallExpr mcall) {
         List<String> ret = new ArrayList<>();
         for(int i=0; i<mcall.getArguments().size(); i++) {
-            ret.add(LiteralExpr.getSimpleJavaName(mcall.getArgument(i).getClass().getSimpleName()));
+            try {
+                ret.add(LiteralExpr.getSimpleJavaName(mcall.getArgument(i).getClass().getSimpleName()));
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                String maybeSolved = this.myTypeSolver.tryResolveTypeInClass(mcall.getArgument(i).toString());
+                if(maybeSolved != null) {
+                    ret.add(maybeSolved);
+                }
+            }
+
+
         }
         return ret;
     }

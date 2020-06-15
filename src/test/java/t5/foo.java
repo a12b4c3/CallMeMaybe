@@ -10,6 +10,10 @@ public class foo {
     }
 
     private void local_method() {
+        this.returnsNumber(ifield);
+
+        int hey = this.returnsNumber(ifield);
+
         for (int i = 0; i < ifield; i++) {
             for (int j = 4; j < ifield; j++) {
                 System.out.println("how does it handle nested loops?");
