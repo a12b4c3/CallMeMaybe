@@ -7,6 +7,7 @@ public class Question {
     List<String> subquestions;
     public Question() {
         this.subquestions = new ArrayList<String>();
+        this.addedNewQuestion("is this a question?");
     }
 
     public boolean addedNewQuestion(String question) {
