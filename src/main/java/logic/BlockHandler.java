@@ -33,9 +33,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 this.diagram.beginLoop("for each elements");
                 handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements(), false);
                 this.diagram.endLoop();
-            } else if (statementClass.equals(Stmt.FOR.toString()) || statementClass.equals(Stmt.WHILE.toString())) {
+            } else if (statementClass.equals(Stmt.FOR.toString())) {
                 this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
                 handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements(), false);
+                this.diagram.endLoop();
+            } else if (statementClass.equals(Stmt.WHILE.toString())) {
+                this.diagram.beginLoop(((WhileStmt) s).getCondition().toString());
+                handleStatements(((BlockStmt) ((WhileStmt) s).getBody()).getStatements(), false);
                 this.diagram.endLoop();
             } else if (statementClass.equals(Stmt.IF.toString())) {
                 if (isNestedif) {
