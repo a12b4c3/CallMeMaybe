@@ -1,11 +1,14 @@
 package logic;
 
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.utils.SourceRoot;
 import libs.SequenceDiagram;
 import libs.Stmt;
+
+import java.util.ArrayList;
 
 
 public class BlockHandler extends VoidVisitorAdapter<Void> {
@@ -36,13 +39,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
             } else if (statementClass.equals(Stmt.FOR.toString())) {
                 this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
                 if (((ForStmt) s).getInitialization().get(0).getChildNodes().get(0).getChildNodes().get(2).getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
-                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
                     ehandler.handleConditionMethodCall((MethodCallExpr) ((ForStmt) s).getInitialization().get(0).getChildNodes().get(0).getChildNodes().get(2));
                 }
                 List<Node> conditions = ((ForStmt) s).getCompare().get().getChildNodes();
                 for (Node c: conditions) {
                     if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
-                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
                         ehandler.handleConditionMethodCall((MethodCallExpr) c);
                     }
                 }
@@ -53,7 +56,7 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 List<Node> conditions = ((WhileStmt) s).getCondition().getChildNodes();
                 for (Node c: conditions) {
                     if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
-                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
                         ehandler.handleConditionMethodCall((MethodCallExpr) c);
                     }
                 }
@@ -83,7 +86,7 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
             List<Node> conditions = ((IfStmt) s).getCondition().getChildNodes();
             for (Node c: conditions) {
                 if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
-                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
                     ehandler.handleConditionMethodCall((MethodCallExpr) c);
                 }
             }
@@ -105,7 +108,7 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
             List<Node> conditions = ((IfStmt) s).getCondition().getChildNodes();
             for (Node c: conditions) {
                 if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
-                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
                     ehandler.handleConditionMethodCall((MethodCallExpr) c);
                 }
             }
