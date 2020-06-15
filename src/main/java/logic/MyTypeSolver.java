@@ -5,6 +5,7 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
@@ -33,6 +34,7 @@ public class MyTypeSolver {
     private List<String> methodParams;
     List<CompilationUnit> compilations;
     private CompilationUnit targetCu;
+    private JavaSymbolSolver symbolSolver;
     MethodDeclaration initMethod = null;
 
     public MyTypeSolver(Path path,String targetClass ,String targetMethod, List<String> methodParams) {
@@ -52,7 +54,7 @@ public class MyTypeSolver {
     private void startConfiguration() throws IOException {
 
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
-        JavaSymbolSolver symbolSolver = new JavaSymbolSolver(typeSolver);
+        this.symbolSolver = new JavaSymbolSolver(typeSolver);
         /**StaticJavaParser
                 .getConfiguration()
                 .setSymbolResolver(symbolSolver);**/
@@ -82,7 +84,6 @@ public class MyTypeSolver {
 
             this.initMethod.findAll(VariableDeclarationExpr.class).forEach(vde -> {
                 types.put(vde.getVariables().get(0).getName().toString(), vde.getVariables().get(0).getType().toString());
-                System.out.println(vde.calculateResolvedType().describe());
             });
 
            String type =  this.initMethod.getParameterByName(toBeSolved).get().getType().toString();
@@ -96,11 +97,23 @@ public class MyTypeSolver {
     }
 
     public String tryResolveTypeInClass(String toBeSolved){
+        System.out.println(toBeSolved);
+        if(toBeSolved.equals("System.out")){
+            return null;
+        }
 
         HashMap<String,String> types = new HashMap<String,String>();
             this.targetCu.findAll(FieldDeclaration.class).forEach(fd -> {
                 types.put(fd.getVariables().get(0).getName().toString(),fd.getVariables().get(0).getType().toString());
             });
+
+            this.targetCu.findAll(Expression.class).forEach(exp ->{
+                List<Node> cns = exp.getChildNodes();
+                if(cns.size() != 0 && cns.get(0).toString().equals(toBeSolved)){
+                    types.put(toBeSolved,cns.get(0).toString());
+                }
+            });
+
 
         return types.get(toBeSolved);
     }
