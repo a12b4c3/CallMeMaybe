@@ -25,7 +25,7 @@ public class Client {
         this.url = urlStr;
     }
 
-    public void sendPostAndDraw(String msg) {
+    public void sendPostAndDraw(String msg, String filename) {
 
         try {
             HttpPost post = new HttpPost(this.url);
@@ -35,7 +35,7 @@ public class Client {
             post.setEntity(entity);
             HttpResponse response = client.execute(post);
             System.out.println(response.getStatusLine());
-            OutputStream outputStream = new FileOutputStream(new File("result.png"));
+            OutputStream outputStream = new FileOutputStream(new File(filename + ".png"));
             int read = 0;
             byte[] bytes = new byte[1024];
 
@@ -55,6 +55,6 @@ public class Client {
 
     public static void main(String[] args) {
         Client client = new Client("http://127.0.0.1:8080/api/v7/generateDiagramImage");
-        client.sendPostAndDraw("title hello_world");
+        client.sendPostAndDraw("title hello_world", "result.png");
     }
 }

@@ -72,9 +72,7 @@ public class Root {
     }
 
     public String finishDiagram() {
-        // todo call concat diagram with newlines
-        // return string
-        return null;
+        return this.diagram.finishDiagram();
     }
 
     private void findLocalClasses() {

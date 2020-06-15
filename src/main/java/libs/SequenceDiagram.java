@@ -206,9 +206,6 @@ public class SequenceDiagram {
      * @return
      */
     public String finishDiagram() {
-//        if (this.callNotReturned) {
-//            this.returnVoidCall();
-//        }
         return String.join("\n", this.stringToPaint);
     }
 
