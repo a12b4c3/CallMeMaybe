@@ -111,7 +111,7 @@ public class ExpressionHandler {
 //        } else {
             //TODO
             // Add it create call and add return call
-            this.diagram.addCallAToB(this.currClass, type, " new "+type, "()" );
+            this.diagram.addCallAToB(this.currClass, type, " new "+type, "");
             this.diagram.addReturn(type,this.currClass, "");
 
  //       }
