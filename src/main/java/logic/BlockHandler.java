@@ -2,13 +2,16 @@ package logic;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.utils.SourceRoot;
+import libs.Expr;
 import libs.SequenceDiagram;
 import libs.Stmt;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BlockHandler extends VoidVisitorAdapter<Void> {
@@ -68,8 +71,11 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 } else {
                     handleIf(s, false);
                 }
-            } else if (statementClass.equals(Stmt.BLOCK.toString())) {
-                this.diagram.endConditions();
+            } else if (statementClass.equals(Stmt.RETURN.toString())) {
+                if (s.getChildNodes().get(0).getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root, this.myTypeSolver);
+                    ehandler.handleConditionMethodCall((MethodCallExpr) s.getChildNodes().get(0));
+                }
             } else {
                 System.out.println("Unsupported statement class: " + statementClass);
             }
