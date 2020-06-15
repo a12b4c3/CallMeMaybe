@@ -33,10 +33,14 @@ public class MethodHandler {
     }
 
     public void handleMethod() {
-        NodeList<Statement> statements = methodNode.getBody().get().getStatements();
-        Validator.validateNotNull(statements);
-        BlockHandler blockHandler = new BlockHandler(this.currClass, this.root, this.myTypeSolver);
-        blockHandler.handleStatements(statements);
+        try {
+            NodeList<Statement> statements = methodNode.getBody().get().getStatements();
+            Validator.validateNotNull(statements);
+            BlockHandler blockHandler = new BlockHandler(this.currClass, this.root, this.myTypeSolver);
+            blockHandler.handleStatements(statements, true);
+        } catch (Exception e) {
+            System.out.println("hmmmm?");
+        }
 
         //if(this.returnType != null)
             //this.diagram.addReturn(currClass, currClass, this.returnType);

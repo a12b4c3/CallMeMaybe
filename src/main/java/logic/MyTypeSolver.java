@@ -10,6 +10,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
+import com.github.javaparser.symbolsolver.javaparser.Navigator;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
@@ -81,7 +82,12 @@ public class MyTypeSolver {
 
             this.initMethod.findAll(VariableDeclarationExpr.class).forEach(vde -> {
                 types.put(vde.getVariables().get(0).getName().toString(), vde.getVariables().get(0).getType().toString());
+                System.out.println(vde.calculateResolvedType().describe());
             });
+
+           String type =  this.initMethod.getParameterByName(toBeSolved).get().getType().toString();
+            if(type != null)
+                types.put(toBeSolved,type);
         }catch (Exception e) {
             System.out.println("method is not found or construction is not found");
         }
@@ -92,7 +98,6 @@ public class MyTypeSolver {
     public String tryResolveTypeInClass(String toBeSolved){
 
         HashMap<String,String> types = new HashMap<String,String>();
-
             this.targetCu.findAll(FieldDeclaration.class).forEach(fd -> {
                 types.put(fd.getVariables().get(0).getName().toString(),fd.getVariables().get(0).getType().toString());
             });
