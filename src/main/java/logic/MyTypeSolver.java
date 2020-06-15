@@ -13,6 +13,7 @@ import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.javaparser.Navigator;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
+import com.github.javaparser.symbolsolver.resolution.SymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.github.javaparser.utils.SourceRoot;
@@ -109,7 +110,7 @@ public class MyTypeSolver {
 
             this.targetCu.findAll(Expression.class).forEach(exp ->{
                 List<Node> cns = exp.getChildNodes();
-                if(cns.size() != 0 && cns.get(0).toString().equals(toBeSolved)){
+                if(cns.size() != 0 && cns.get(0).toString().equals(toBeSolved) && !types.containsKey(toBeSolved)){
                     types.put(toBeSolved,cns.get(0).toString());
                 }
             });
