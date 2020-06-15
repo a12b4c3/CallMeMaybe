@@ -1,0 +1,14 @@
+// package t1
+title foo.calls_two_methods()
+
+// the class we start analysis from
+participant foo
+
+// must start with an entry
+autoactivation on
+[->foo:calls_two_methods()
+foo->foo:calls_one_method()
+foo->foo:bazz()
+// methods which return print out the type of return
+foo-->foo: ret int
+foo-->foo:

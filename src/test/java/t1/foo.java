@@ -21,6 +21,10 @@ public class foo {
         System.out.println("shouldve called two methods");
     }
 
+    public void someMethod(String[] arr) {
+        this.calls_two_methods();
+    }
+
     public int bazz(int i, String s) { return i; }
     public int bazz() {
         return 1;

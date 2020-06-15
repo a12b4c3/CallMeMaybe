@@ -1,0 +1,14 @@
+title foo.calls_one_other_class_returns()
+
+autoactivation on
+[->foo:calls_one_other_class_returns()
+
+// whenever a new class is instantiated we create it
+foo->*bar:<<create>>
+// make sure to return the constructor
+bar-->foo:
+
+
+foo->bar:call_me_with_return()
+// make sure to return the void method
+bar-->foo:ret int

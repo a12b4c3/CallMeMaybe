@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Expr">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/main/java/libs/Expr.java" />
+      <root url="file://$PROJECT_DIR$/src/main/java/libs/SequenceDiagram.java" />
+      <root url="file://$PROJECT_DIR$/src/main/java/libs/Stmt.java" />
+      <root url="file://$PROJECT_DIR$/src/main/java/libs/StrConst.java" />
+      <root url="file://$PROJECT_DIR$/src/main/java/libs/Utils.java" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
