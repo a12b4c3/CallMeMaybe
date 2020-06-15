@@ -35,10 +35,28 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
                 this.diagram.endLoop();
             } else if (statementClass.equals(Stmt.FOR.toString())) {
                 this.diagram.beginLoop(((ForStmt) s).getCompare().toString());
+                if (((ForStmt) s).getInitialization().get(0).getChildNodes().get(0).getChildNodes().get(2).getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ehandler.handleConditionMethodCall((MethodCallExpr) ((ForStmt) s).getInitialization().get(0).getChildNodes().get(0).getChildNodes().get(2));
+                }
+                List<Node> conditions = ((ForStmt) s).getCompare().get().getChildNodes();
+                for (Node c: conditions) {
+                    if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                        ehandler.handleConditionMethodCall((MethodCallExpr) c);
+                    }
+                }
                 handleStatements(((BlockStmt) ((ForStmt) s).getBody()).getStatements(), false);
                 this.diagram.endLoop();
             } else if (statementClass.equals(Stmt.WHILE.toString())) {
                 this.diagram.beginLoop(((WhileStmt) s).getCondition().toString());
+                List<Node> conditions = ((WhileStmt) s).getCondition().getChildNodes();
+                for (Node c: conditions) {
+                    if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                        ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                        ehandler.handleConditionMethodCall((MethodCallExpr) c);
+                    }
+                }
                 handleStatements(((BlockStmt) ((WhileStmt) s).getBody()).getStatements(), false);
                 this.diagram.endLoop();
             } else if (statementClass.equals(Stmt.IF.toString())) {
@@ -62,6 +80,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
             } else {
                 this.diagram.beginIf(((IfStmt) s).getCondition().toString(), false);
             }
+            List<Node> conditions = ((IfStmt) s).getCondition().getChildNodes();
+            for (Node c: conditions) {
+                if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ehandler.handleConditionMethodCall((MethodCallExpr) c);
+                }
+            }
             handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements(), true);
             if (((IfStmt) s).getElseStmt().isPresent()) {
                 handleElse(((IfStmt) s).getElseStmt().get());
@@ -77,6 +102,13 @@ public class BlockHandler extends VoidVisitorAdapter<Void> {
         int num = s.getChildNodes().size();
         if (num != 1) {
             this.diagram.moreElseIf(((IfStmt) s).getCondition().toString());
+            List<Node> conditions = ((IfStmt) s).getCondition().getChildNodes();
+            for (Node c: conditions) {
+                if (c.getClass().getSimpleName().equals(Expr.METHOD_CALL.toString())) {
+                    ExpressionHandler ehandler = new ExpressionHandler(currClass, this.root);
+                    ehandler.handleConditionMethodCall((MethodCallExpr) c);
+                }
+            }
             handleStatements(((BlockStmt) ((IfStmt) s).getThenStmt()).getStatements(), true); // nested if detected here
             if (((IfStmt) s).getElseStmt().get().getChildNodes().size() == 1) {
                 this.diagram.moreElseIf("");

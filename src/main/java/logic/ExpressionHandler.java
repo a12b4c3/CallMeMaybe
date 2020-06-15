@@ -52,6 +52,10 @@ public class ExpressionHandler {
             //else then expression is just variable declaration. ignore it.
         }
     }
+    
+    public void handleConditionMethodCall(MethodCallExpr mCallExpr) {
+        handle(mCallExpr);
+    }
 
     private void handle(MethodCallExpr mCallExpr) {
         if (Utils.callInScope(mCallExpr, Expr.THIS)) {
