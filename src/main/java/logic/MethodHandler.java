@@ -27,7 +27,6 @@ public class MethodHandler {
         this.methodParams = methodParams;
         this.methodNode = Utils.getMethodDeclarationFromClass(this.root, this.currClass, this.currMethod, this.methodParams);
         this.returnType = methodNode.getType().toString();
-        // this.returnType = methodNode.getTypeAsString();
         this.myTypeSolver = myTypeSolver;
 
     }
